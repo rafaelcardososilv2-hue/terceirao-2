@@ -49,7 +49,7 @@ export function TopicsSection() {
         <div className="rounded-2xl border border-dashed border-border bg-card/50 py-16 text-center">
           <p className="mb-2 text-lg font-medium text-foreground">Nenhum topico criado</p>
           <p className="mb-4 text-sm text-muted-foreground">
-            Clique em &quot;Editar Site&quot; para comecar a criar topicos.
+            Nenhum topico criado ainda.
           </p>
         </div>
       )}

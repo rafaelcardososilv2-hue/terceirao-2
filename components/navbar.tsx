@@ -1,8 +1,9 @@
 "use client"
 
 import { useSite } from "@/lib/site-context"
+import { useAuth } from "@/lib/auth-context"
 import { SocialLinks } from "./social-links"
-import { Pencil, Settings, Menu, X } from "lucide-react"
+import { Pencil, Settings, Menu, X, LogOut, Shield, User } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -15,7 +16,8 @@ const NAV_ITEMS = [
 ]
 
 export function Navbar() {
-  const { editMode, toggleEditMode, currentPage, setCurrentPage } = useSite()
+  const { editMode, toggleEditMode, isAdmin, currentPage, setCurrentPage } = useSite()
+  const { user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   function navigate(page: string) {
@@ -62,28 +64,53 @@ export function Navbar() {
         </div>
 
         {/* right side */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <SocialLinks size="sm" />
 
-          <button
-            onClick={toggleEditMode}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium shadow-sm transition-all ${
-              editMode
-                ? "bg-primary text-primary-foreground"
-                : "bg-card text-card-foreground border border-border"
-            }`}
-            aria-label={
-              editMode ? "Desativar modo de edicao" : "Ativar modo de edicao"
-            }
-          >
-            {editMode ? (
-              <Pencil className="h-3.5 w-3.5" />
+          {/* User badge */}
+          <div className="hidden items-center gap-1.5 rounded-full border border-border bg-secondary/50 px-2.5 py-1 sm:flex">
+            {isAdmin ? (
+              <Shield className="h-3.5 w-3.5 text-accent" />
             ) : (
-              <Settings className="h-3.5 w-3.5" />
+              <User className="h-3.5 w-3.5 text-muted-foreground" />
             )}
-            <span className="hidden sm:inline">
-              {editMode ? "Editando" : "Editar"}
+            <span className="text-xs font-medium text-foreground max-w-[80px] truncate">
+              {user?.name}
             </span>
+          </div>
+
+          {/* Edit button - ADMIN ONLY */}
+          {isAdmin && (
+            <button
+              onClick={toggleEditMode}
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium shadow-sm transition-all ${
+                editMode
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card text-card-foreground border border-border"
+              }`}
+              aria-label={
+                editMode ? "Desativar modo de edicao" : "Ativar modo de edicao"
+              }
+            >
+              {editMode ? (
+                <Pencil className="h-3.5 w-3.5" />
+              ) : (
+                <Settings className="h-3.5 w-3.5" />
+              )}
+              <span className="hidden sm:inline">
+                {editMode ? "Editando" : "Editar"}
+              </span>
+            </button>
+          )}
+
+          {/* Logout */}
+          <button
+            onClick={logout}
+            className="rounded-full border border-border bg-card p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+            aria-label="Sair"
+            title="Sair"
+          >
+            <LogOut className="h-3.5 w-3.5" />
           </button>
 
           {/* mobile hamburger */}
@@ -104,6 +131,19 @@ export function Navbar() {
       {/* mobile menu */}
       {mobileOpen && (
         <div className="border-t border-border bg-card px-4 py-3 md:hidden">
+          {/* User info on mobile */}
+          <div className="mb-3 flex items-center gap-2 rounded-lg bg-secondary/50 px-3 py-2">
+            {isAdmin ? (
+              <Shield className="h-4 w-4 text-accent" />
+            ) : (
+              <User className="h-4 w-4 text-muted-foreground" />
+            )}
+            <span className="text-sm font-medium text-foreground">{user?.name}</span>
+            <span className="ml-auto rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+              {isAdmin ? "Admin" : "Aluno"}
+            </span>
+          </div>
+
           <div className="flex flex-col gap-1">
             {NAV_ITEMS.map((item) => (
               <button
@@ -119,9 +159,19 @@ export function Navbar() {
               </button>
             ))}
           </div>
-          <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">
-            <SocialLinks size="sm" />
-            <span className="text-xs text-muted-foreground">Siga a turma!</span>
+
+          <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+            <div className="flex items-center gap-2">
+              <SocialLinks size="sm" />
+              <span className="text-xs text-muted-foreground">Siga a turma!</span>
+            </div>
+            <button
+              onClick={logout}
+              className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium text-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Sair
+            </button>
           </div>
         </div>
       )}

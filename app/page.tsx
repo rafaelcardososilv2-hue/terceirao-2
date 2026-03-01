@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import { AuthProvider, useAuth } from "@/lib/auth-context"
 import { SiteProvider, useSite } from "@/lib/site-context"
 import { ThemeWrapper } from "@/components/theme-wrapper"
 import { Navbar } from "@/components/navbar"
@@ -12,6 +13,21 @@ import { TopicsSection } from "@/components/topics-section"
 import { StudentsSection } from "@/components/students-section"
 import { RafflesSection } from "@/components/raffles-section"
 import { SocialLinks } from "@/components/social-links"
+import { LoginScreen } from "@/components/login-screen"
+
+function AuthGate() {
+  const { user } = useAuth()
+
+  if (!user) return <LoginScreen />
+
+  return (
+    <SiteProvider>
+      <ThemeWrapper>
+        <PageContent />
+      </ThemeWrapper>
+    </SiteProvider>
+  )
+}
 
 function PageContent() {
   const { currentPage } = useSite()
@@ -78,10 +94,8 @@ function PageContent() {
 
 export default function Home() {
   return (
-    <SiteProvider>
-      <ThemeWrapper>
-        <PageContent />
-      </ThemeWrapper>
-    </SiteProvider>
+    <AuthProvider>
+      <AuthGate />
+    </AuthProvider>
   )
 }

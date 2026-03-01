@@ -1,6 +1,7 @@
 "use client"
 
 import { useSite } from "@/lib/site-context"
+import { useAuth } from "@/lib/auth-context"
 import type { TopicType } from "@/lib/store"
 import { DynIcon } from "./icon-picker"
 import { Trash2, MessageCircle, ImagePlus } from "lucide-react"
@@ -58,13 +59,13 @@ export function TopicCard({
   )
 }
 
-/* ---------- Create topic form ---------- */
+/* ---------- Create topic form (admin only) ---------- */
 export function CreateTopicForm({ onClose }: { onClose: () => void }) {
   const { addTopic } = useSite()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [icon, setIcon] = useState("star")
-  const [color, setColor] = useState("#e85d3a")
+  const [color, setColor] = useState("#722f37")
 
   const icons = ["camera", "music", "heart", "star", "trophy", "smile", "zap", "flame"]
   const colors = ["#722f37", "#c9a84c", "#8b4049", "#d4b96a", "#5c2329", "#a35760", "#b8860b", "#9b5de5"]
@@ -149,12 +150,12 @@ export function CreateTopicForm({ onClose }: { onClose: () => void }) {
 
 /* ---------- Topic detail modal ---------- */
 export function TopicDetail({ topicId, onClose }: { topicId: string; onClose: () => void }) {
-  const { state, addPhoto, deletePhoto, likePhoto, addComment, deleteComment, editMode } = useSite()
+  const { state, addPhoto, deletePhoto, likePhoto, addComment, deleteComment, editMode, isAdmin } = useSite()
+  const { user } = useAuth()
   const topic = state.topics.find((t) => t.id === topicId)
   const photos = state.photos.filter((p) => p.topicId === topicId).sort((a, b) => b.createdAt - a.createdAt)
   const comments = state.comments.filter((c) => c.topicId === topicId).sort((a, b) => b.createdAt - a.createdAt)
 
-  const [commentAuthor, setCommentAuthor] = useState("")
   const [commentText, setCommentText] = useState("")
   const [photoCaption, setPhotoCaption] = useState("")
   const fileRef = useRef<HTMLInputElement>(null)
@@ -174,8 +175,8 @@ export function TopicDetail({ topicId, onClose }: { topicId: string; onClose: ()
 
   function handleComment(e: React.FormEvent) {
     e.preventDefault()
-    if (!commentText.trim() || !commentAuthor.trim()) return
-    addComment({ author: commentAuthor.trim(), text: commentText.trim(), topicId })
+    if (!commentText.trim() || !user?.name) return
+    addComment({ author: user.name, text: commentText.trim(), topicId })
     setCommentText("")
   }
 
@@ -200,27 +201,29 @@ export function TopicDetail({ topicId, onClose }: { topicId: string; onClose: ()
         </div>
 
         <div className="p-6">
-          {/* upload photo */}
-          <div className="mb-6">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Adicionar Foto</h3>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <input
-                value={photoCaption}
-                onChange={(e) => setPhotoCaption(e.target.value)}
-                placeholder="Legenda da foto..."
-                className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary"
-              />
-              <input ref={fileRef} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
-              >
-                <ImagePlus className="h-4 w-4" />
-                Enviar Foto
-              </button>
+          {/* upload photo - admin only */}
+          {isAdmin && (
+            <div className="mb-6">
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Adicionar Foto</h3>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <input
+                  value={photoCaption}
+                  onChange={(e) => setPhotoCaption(e.target.value)}
+                  placeholder="Legenda da foto..."
+                  className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary"
+                />
+                <input ref={fileRef} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+                >
+                  <ImagePlus className="h-4 w-4" />
+                  Enviar Foto
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* photo grid */}
           {photos.length > 0 && (
@@ -259,18 +262,18 @@ export function TopicDetail({ topicId, onClose }: { topicId: string; onClose: ()
             </div>
           )}
 
-          {/* comments */}
+          {/* comments - all users can comment */}
           <div>
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               Comentarios ({comments.length})
             </h3>
             <form onSubmit={handleComment} className="mb-4 flex flex-col gap-2 sm:flex-row">
-              <input
-                value={commentAuthor}
-                onChange={(e) => setCommentAuthor(e.target.value)}
-                placeholder="Seu nome"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary sm:w-32"
-              />
+              <div className="flex items-center gap-2 rounded-lg border border-input bg-secondary/30 px-3 py-2 sm:w-36">
+                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-[10px] font-bold text-primary">
+                  {user?.name?.[0]?.toUpperCase()}
+                </div>
+                <span className="truncate text-sm text-foreground">{user?.name}</span>
+              </div>
               <input
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
