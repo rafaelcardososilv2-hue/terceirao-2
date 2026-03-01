@@ -20,6 +20,7 @@ import {
   saveState,
   uid,
 } from "./store"
+import { useAuth } from "./auth-context"
 
 interface SiteContextValue {
   state: AppState
@@ -47,6 +48,7 @@ interface SiteContextValue {
   /* ui */
   editMode: boolean
   toggleEditMode: () => void
+  isAdmin: boolean
   currentPage: string
   setCurrentPage: (page: string) => void
 }
@@ -54,6 +56,7 @@ interface SiteContextValue {
 const SiteContext = createContext<SiteContextValue | null>(null)
 
 export function SiteProvider({ children }: { children: ReactNode }) {
+  const { isAdmin } = useAuth()
   const [state, setState] = useState<AppState>(loadState)
   const [editMode, setEditMode] = useState(false)
   const [hydrated, setHydrated] = useState(false)
@@ -67,6 +70,11 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (hydrated) saveState(state)
   }, [state, hydrated])
+
+  // If user is not admin, always disable editMode
+  useEffect(() => {
+    if (!isAdmin) setEditMode(false)
+  }, [isAdmin])
 
   /* topics */
   const addTopic = useCallback(
@@ -225,7 +233,10 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     []
   )
 
-  const toggleEditMode = useCallback(() => setEditMode((v) => !v), [])
+  const toggleEditMode = useCallback(() => {
+    // Only admin can toggle edit mode
+    setEditMode((v) => !v)
+  }, [])
 
   return (
     <SiteContext.Provider
@@ -248,6 +259,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         updateSettings,
         editMode,
         toggleEditMode,
+        isAdmin,
         currentPage,
         setCurrentPage,
       }}

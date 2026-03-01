@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Send, Trash2 } from "lucide-react"
 import { useSite } from "@/lib/site-context"
+import { useAuth } from "@/lib/auth-context"
 
 interface WallMessage {
   id: string
@@ -39,8 +40,8 @@ function saveMessages(msgs: WallMessage[]) {
 
 export function QuickWall() {
   const { editMode } = useSite()
+  const { user } = useAuth()
   const [messages, setMessages] = useState<WallMessage[]>([])
-  const [author, setAuthor] = useState("")
   const [text, setText] = useState("")
 
   useEffect(() => {
@@ -49,10 +50,10 @@ export function QuickWall() {
 
   function submit(e: React.FormEvent) {
     e.preventDefault()
-    if (!text.trim() || !author.trim()) return
+    if (!text.trim() || !user?.name) return
     const newMsg: WallMessage = {
       id: Math.random().toString(36).slice(2),
-      author: author.trim(),
+      author: user.name,
       text: text.trim(),
       color: NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)],
       createdAt: Date.now(),
@@ -78,12 +79,12 @@ export function QuickWall() {
       </div>
 
       <form onSubmit={submit} className="mb-6 flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row">
-        <input
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          placeholder="Seu nome"
-          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary sm:w-36"
-        />
+        <div className="flex items-center gap-2 rounded-lg border border-input bg-secondary/30 px-3 py-2 sm:w-40">
+          <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-[10px] font-bold text-primary">
+            {user?.name?.[0]?.toUpperCase()}
+          </div>
+          <span className="truncate text-sm text-foreground">{user?.name}</span>
+        </div>
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}

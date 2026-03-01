@@ -127,7 +127,7 @@ export function RafflesSection() {
           <p className="mb-4 text-sm text-muted-foreground">
             {editMode
               ? 'Clique em "Adicionar Rifa" para comecar.'
-              : 'Ative o modo "Editar" para adicionar rifas.'}
+              : 'Nenhuma rifa no momento.'}
           </p>
           {editMode && (
             <button

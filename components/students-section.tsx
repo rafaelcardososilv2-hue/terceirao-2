@@ -94,7 +94,7 @@ export function StudentsSection() {
           <p className="mb-4 text-sm text-muted-foreground">
             {editMode
               ? 'Clique em "Adicionar Aluno" para comecar.'
-              : 'Ative o modo "Editar" para adicionar alunos.'}
+              : 'O admin ainda nao adicionou alunos.'}
           </p>
           {editMode && (
             <button
