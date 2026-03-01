@@ -14,8 +14,12 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Turma 3°2 - Nossa Sala',
+  title: 'Terceirão 2k26 - Turma 3°2',
   description: 'Site oficial da turma 3°2. Momentos, fotos e muito mais!',
+  icons: {
+    icon: '/favicon.jpeg',
+    apple: '/favicon.jpeg',
+  },
 }
 
 export const viewport: Viewport = {

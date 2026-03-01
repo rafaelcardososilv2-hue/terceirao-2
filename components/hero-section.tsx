@@ -2,6 +2,7 @@
 
 import { useSite } from "@/lib/site-context"
 import { SocialLinks } from "./social-links"
+import Image from "next/image"
 import { useState } from "react"
 
 export function HeroSection() {
@@ -39,7 +40,20 @@ export function HeroSection() {
       {/* gold accent line at top */}
       <div className="h-1 w-full bg-accent" />
 
-      <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 py-16 text-center md:py-24">
+      <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 py-12 text-center md:py-20">
+        {/* banner image */}
+        <div className="relative mb-2">
+          <div className="absolute -inset-3 rounded-full bg-accent/20 blur-xl" />
+          <Image
+            src="/images/banner.jpeg"
+            alt="Terceirão 2k26 - Banner da turma"
+            width={180}
+            height={180}
+            className="relative h-36 w-36 rounded-full object-cover shadow-2xl ring-4 ring-accent md:h-44 md:w-44"
+            priority
+          />
+        </div>
+
         {/* site name */}
         {editingField === "siteName" ? (
           <input

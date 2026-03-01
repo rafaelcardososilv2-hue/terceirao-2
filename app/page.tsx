@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { SiteProvider, useSite } from "@/lib/site-context"
 import { ThemeWrapper } from "@/components/theme-wrapper"
 import { Navbar } from "@/components/navbar"
@@ -56,9 +57,16 @@ function PageContent() {
 
       <footer className="border-t border-border py-8">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4">
+          <Image
+            src="/images/banner.jpeg"
+            alt="Terceirão 2k26"
+            width={56}
+            height={56}
+            className="h-14 w-14 rounded-full object-cover ring-2 ring-accent"
+          />
           <SocialLinks size="md" />
           <p className="text-sm text-muted-foreground">
-            {"Turma 3\u00b02 \u2014 Feito com carinho pela galera"}
+            {"Terceirão 2k26 \u2014 Turma 3\u00b02 \u2014 Feito com carinho pela galera"}
           </p>
         </div>
       </footer>

@@ -3,6 +3,7 @@
 import { useSite } from "@/lib/site-context"
 import { SocialLinks } from "./social-links"
 import { Pencil, Settings, Menu, X } from "lucide-react"
+import Image from "next/image"
 import { useState } from "react"
 
 const NAV_ITEMS = [
@@ -31,11 +32,15 @@ export function Navbar() {
           onClick={() => navigate("inicio")}
           className="flex items-center gap-2"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-            3-2
-          </div>
+          <Image
+            src="/images/banner.jpeg"
+            alt="Terceirão 2k26"
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-full object-cover ring-2 ring-accent"
+          />
           <span className="hidden font-bold text-foreground sm:block">
-            Turma 3-2
+            Terceirão 2k26
           </span>
         </button>
 
