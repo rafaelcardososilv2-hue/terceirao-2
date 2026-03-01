@@ -5,21 +5,21 @@ import { Palette, X, RotateCcw } from "lucide-react"
 import { useState } from "react"
 
 const BG_COLORS = [
-  { label: "Creme", value: "#faf7f2" },
+  { label: "Creme", value: "#fdf8f4" },
   { label: "Branco", value: "#ffffff" },
-  { label: "Azul Claro", value: "#f0f4f8" },
-  { label: "Rosa Claro", value: "#fef2f2" },
-  { label: "Verde Claro", value: "#f0fdf4" },
-  { label: "Escuro", value: "#1a1a1a" },
+  { label: "Rosa Antigo", value: "#faf0f0" },
+  { label: "Marfim", value: "#f5f0e8" },
+  { label: "Cinza Claro", value: "#f2f2f2" },
+  { label: "Escuro", value: "#1a1014" },
 ]
 
 const ACCENT_COLORS = [
-  { label: "Laranja", value: "#e85d3a" },
-  { label: "Verde", value: "#2d6a4f" },
-  { label: "Azul", value: "#457b9d" },
-  { label: "Dourado", value: "#f4a261" },
-  { label: "Rosa", value: "#e76f51" },
-  { label: "Roxo", value: "#9b5de5" },
+  { label: "Vinho", value: "#722f37" },
+  { label: "Dourado", value: "#c9a84c" },
+  { label: "Bordô", value: "#5c2329" },
+  { label: "Ouro Velho", value: "#b8860b" },
+  { label: "Rosê", value: "#8b4049" },
+  { label: "Champagne", value: "#d4b96a" },
 ]
 
 export function ThemeCustomizer() {
@@ -32,8 +32,8 @@ export function ThemeCustomizer() {
   function resetAll() {
     if (confirm("Resetar todas as configuracoes visuais?")) {
       updateSettings({
-        bgColor: "#faf7f2",
-        accentColor: "#e85d3a",
+        bgColor: "#fdf8f4",
+        accentColor: "#722f37",
         theme: "light",
       })
     }
@@ -51,18 +51,30 @@ export function ThemeCustomizer() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end justify-end bg-foreground/30 backdrop-blur-sm sm:items-center sm:p-4" onClick={() => setOpen(false)}>
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-end bg-foreground/30 backdrop-blur-sm sm:items-center sm:p-4"
+          onClick={() => setOpen(false)}
+        >
           <div
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-sm rounded-t-2xl bg-card p-6 shadow-2xl border border-border sm:rounded-2xl"
           >
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-card-foreground">Personalizar</h2>
+              <h2 className="text-lg font-bold text-card-foreground">
+                Personalizar
+              </h2>
               <div className="flex items-center gap-2">
-                <button onClick={resetAll} className="rounded-lg p-2 text-muted-foreground hover:bg-secondary transition-colors" title="Resetar">
+                <button
+                  onClick={resetAll}
+                  className="rounded-lg p-2 text-muted-foreground hover:bg-secondary transition-colors"
+                  title="Resetar"
+                >
                   <RotateCcw className="h-4 w-4" />
                 </button>
-                <button onClick={() => setOpen(false)} className="rounded-lg p-2 text-muted-foreground hover:bg-secondary transition-colors">
+                <button
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg p-2 text-muted-foreground hover:bg-secondary transition-colors"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
@@ -70,14 +82,23 @@ export function ThemeCustomizer() {
 
             {/* Background color */}
             <div className="mb-5">
-              <label className="mb-2 block text-sm font-medium text-card-foreground">Cor de Fundo</label>
+              <label className="mb-2 block text-sm font-medium text-card-foreground">
+                Cor de Fundo
+              </label>
               <div className="flex flex-wrap gap-2">
                 {BG_COLORS.map((c) => (
                   <button
                     key={c.value}
-                    onClick={() => updateSettings({ bgColor: c.value, theme: c.value === "#1a1a1a" ? "dark" : "light" })}
+                    onClick={() =>
+                      updateSettings({
+                        bgColor: c.value,
+                        theme: c.value === "#1a1014" ? "dark" : "light",
+                      })
+                    }
                     className={`group relative h-10 w-10 rounded-full border-2 transition-all ${
-                      settings.bgColor === c.value ? "border-primary scale-110" : "border-border hover:scale-105"
+                      settings.bgColor === c.value
+                        ? "border-primary scale-110"
+                        : "border-border hover:scale-105"
                     }`}
                     style={{ backgroundColor: c.value }}
                     title={c.label}
@@ -87,7 +108,9 @@ export function ThemeCustomizer() {
                 ))}
               </div>
               <div className="mt-2 flex items-center gap-2">
-                <label className="text-xs text-muted-foreground">Personalizada:</label>
+                <label className="text-xs text-muted-foreground">
+                  Personalizada:
+                </label>
                 <input
                   type="color"
                   value={settings.bgColor}
@@ -104,14 +127,18 @@ export function ThemeCustomizer() {
 
             {/* Accent color */}
             <div className="mb-5">
-              <label className="mb-2 block text-sm font-medium text-card-foreground">Cor de Destaque</label>
+              <label className="mb-2 block text-sm font-medium text-card-foreground">
+                Cor de Destaque
+              </label>
               <div className="flex flex-wrap gap-2">
                 {ACCENT_COLORS.map((c) => (
                   <button
                     key={c.value}
                     onClick={() => updateSettings({ accentColor: c.value })}
                     className={`h-10 w-10 rounded-full border-2 transition-all ${
-                      settings.accentColor === c.value ? "border-foreground scale-110" : "border-transparent hover:scale-105"
+                      settings.accentColor === c.value
+                        ? "border-foreground scale-110"
+                        : "border-transparent hover:scale-105"
                     }`}
                     style={{ backgroundColor: c.value }}
                     title={c.label}
@@ -121,23 +148,46 @@ export function ThemeCustomizer() {
                 ))}
               </div>
               <div className="mt-2 flex items-center gap-2">
-                <label className="text-xs text-muted-foreground">Personalizada:</label>
+                <label className="text-xs text-muted-foreground">
+                  Personalizada:
+                </label>
                 <input
                   type="color"
                   value={settings.accentColor}
-                  onChange={(e) => updateSettings({ accentColor: e.target.value })}
+                  onChange={(e) =>
+                    updateSettings({ accentColor: e.target.value })
+                  }
                   className="h-8 w-8 cursor-pointer rounded border-0"
                 />
               </div>
             </div>
 
             {/* live preview */}
-            <div className="rounded-xl p-4 border border-border" style={{ backgroundColor: settings.bgColor }}>
-              <p className="text-xs font-medium" style={{ color: isColorDark(settings.bgColor) ? "#f0ebe3" : "#1a1a1a" }}>
+            <div
+              className="rounded-xl p-4 border border-border"
+              style={{ backgroundColor: settings.bgColor }}
+            >
+              <p
+                className="text-xs font-medium"
+                style={{
+                  color: isColorDark(settings.bgColor)
+                    ? "#f5ede4"
+                    : "#2d1a1e",
+                }}
+              >
                 Pre-visualizacao
               </p>
-              <div className="mt-2 h-2 w-3/4 rounded-full" style={{ backgroundColor: settings.accentColor }} />
-              <div className="mt-1 h-2 w-1/2 rounded-full" style={{ backgroundColor: settings.accentColor, opacity: 0.5 }} />
+              <div
+                className="mt-2 h-2 w-3/4 rounded-full"
+                style={{ backgroundColor: settings.accentColor }}
+              />
+              <div
+                className="mt-1 h-2 w-1/2 rounded-full"
+                style={{
+                  backgroundColor: settings.accentColor,
+                  opacity: 0.5,
+                }}
+              />
             </div>
           </div>
         </div>

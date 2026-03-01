@@ -67,7 +67,7 @@ export function CreateTopicForm({ onClose }: { onClose: () => void }) {
   const [color, setColor] = useState("#e85d3a")
 
   const icons = ["camera", "music", "heart", "star", "trophy", "smile", "zap", "flame"]
-  const colors = ["#e85d3a", "#2d6a4f", "#f4a261", "#264653", "#e76f51", "#457b9d", "#d4a373", "#9b5de5"]
+  const colors = ["#722f37", "#c9a84c", "#8b4049", "#d4b96a", "#5c2329", "#a35760", "#b8860b", "#9b5de5"]
 
   function submit(e: React.FormEvent) {
     e.preventDefault()

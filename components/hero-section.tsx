@@ -1,11 +1,11 @@
 "use client"
 
 import { useSite } from "@/lib/site-context"
-import { Pencil, Settings } from "lucide-react"
+import { SocialLinks } from "./social-links"
 import { useState } from "react"
 
 export function HeroSection() {
-  const { state, updateSettings, editMode, toggleEditMode } = useSite()
+  const { state, updateSettings, editMode } = useSite()
   const { settings } = state
   const [editingField, setEditingField] = useState<string | null>(null)
   const [tempValue, setTempValue] = useState("")
@@ -25,8 +25,8 @@ export function HeroSection() {
 
   return (
     <header className="relative overflow-hidden">
-      {/* background pattern */}
-      <div className="absolute inset-0 opacity-5">
+      {/* decorative wine/gold pattern */}
+      <div className="absolute inset-0 opacity-[0.03]">
         <div
           className="absolute inset-0"
           style={{
@@ -36,21 +36,10 @@ export function HeroSection() {
         />
       </div>
 
-      <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 py-16 text-center md:py-24">
-        {/* edit mode toggle */}
-        <button
-          onClick={toggleEditMode}
-          className={`fixed right-4 top-4 z-50 flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium shadow-lg transition-all ${
-            editMode
-              ? "bg-primary text-primary-foreground"
-              : "bg-card text-card-foreground border border-border"
-          }`}
-          aria-label={editMode ? "Desativar modo de edicao" : "Ativar modo de edicao"}
-        >
-          {editMode ? <Pencil className="h-4 w-4" /> : <Settings className="h-4 w-4" />}
-          {editMode ? "Editando" : "Editar Site"}
-        </button>
+      {/* gold accent line at top */}
+      <div className="h-1 w-full bg-accent" />
 
+      <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 py-16 text-center md:py-24">
         {/* site name */}
         {editingField === "siteName" ? (
           <input
@@ -65,12 +54,21 @@ export function HeroSection() {
           <h1
             onClick={() => startEdit("siteName", settings.siteName)}
             className={`text-5xl font-bold tracking-tight text-foreground md:text-7xl text-balance ${
-              editMode ? "cursor-pointer hover:ring-2 hover:ring-primary/50 rounded-lg px-4 py-2 transition-all" : ""
+              editMode
+                ? "cursor-pointer hover:ring-2 hover:ring-primary/50 rounded-lg px-4 py-2 transition-all"
+                : ""
             }`}
           >
             {settings.siteName}
           </h1>
         )}
+
+        {/* gold decorative divider */}
+        <div className="flex items-center gap-3">
+          <div className="h-px w-16 bg-accent" />
+          <div className="h-2.5 w-2.5 rotate-45 bg-accent" />
+          <div className="h-px w-16 bg-accent" />
+        </div>
 
         {/* subtitle */}
         {editingField === "subtitle" ? (
@@ -86,7 +84,9 @@ export function HeroSection() {
           <p
             onClick={() => startEdit("subtitle", settings.subtitle)}
             className={`text-xl text-muted-foreground md:text-2xl text-pretty ${
-              editMode ? "cursor-pointer hover:ring-2 hover:ring-primary/50 rounded-lg px-4 py-1 transition-all" : ""
+              editMode
+                ? "cursor-pointer hover:ring-2 hover:ring-primary/50 rounded-lg px-4 py-1 transition-all"
+                : ""
             }`}
           >
             {settings.subtitle}
@@ -107,18 +107,18 @@ export function HeroSection() {
           <p
             onClick={() => startEdit("heroText", settings.heroText)}
             className={`max-w-2xl text-base leading-relaxed text-muted-foreground text-pretty ${
-              editMode ? "cursor-pointer hover:ring-2 hover:ring-primary/50 rounded-lg px-4 py-2 transition-all" : ""
+              editMode
+                ? "cursor-pointer hover:ring-2 hover:ring-primary/50 rounded-lg px-4 py-2 transition-all"
+                : ""
             }`}
           >
             {settings.heroText}
           </p>
         )}
 
-        {/* decorative divider */}
-        <div className="mt-4 flex items-center gap-3">
-          <div className="h-px w-12 bg-border" />
-          <div className="h-2 w-2 rounded-full bg-primary" />
-          <div className="h-px w-12 bg-border" />
+        {/* social links */}
+        <div className="mt-2">
+          <SocialLinks size="lg" />
         </div>
       </div>
     </header>
